@@ -14,6 +14,11 @@ def insert_run(box_id, overlap, result, note=""):
     finally:
         c.close()
 
+def _row_to_dict(row):
+    d = dict(row)
+    d["result"] = json.loads(d.pop("result_json"))
+    return d
+
 def list_runs(limit=50):
     c = connect()
     try:
@@ -21,11 +26,28 @@ def list_runs(limit=50):
             """SELECT r.*, b.name box_name FROM calc_runs r LEFT JOIN boxes b ON b.id=r.box_id ORDER BY r.id DESC LIMIT ?""",
             (limit,),
         ).fetchall()
-        out = []
-        for row in rows:
-            d = dict(row)
-            d["result"] = json.loads(d.pop("result_json"))
-            out.append(d)
-        return out
+        return [_row_to_dict(r) for r in rows]
+    finally:
+        c.close()
+
+def get_run(run_id):
+    """取单条落库用纸档。返回的是写入快照，不做任何重算。"""
+    c = connect()
+    try:
+        row = c.execute(
+            """SELECT r.*, b.name box_name, b.length box_length, b.width box_width,
+                      b.height box_height, b.data_quality box_quality
+               FROM calc_runs r LEFT JOIN boxes b ON b.id=r.box_id
+               WHERE r.id=?""",
+            (run_id,),
+        ).fetchone()
+        return _row_to_dict(row) if row else None
+    finally:
+        c.close()
+
+def count_runs():
+    c = connect()
+    try:
+        return c.execute("SELECT COUNT(*) c FROM calc_runs").fetchone()["c"]
     finally:
         c.close()
