@@ -6,3 +6,8 @@ class EstimateRequest(BaseModel):
     wrap_style: str = "cross"
     save: bool = False
     note: str = ""
+    bow_enabled: bool = False
+    bow_m: float | None = None
+
+class SettingsUpdate(BaseModel):
+    bow_m: float | None = None

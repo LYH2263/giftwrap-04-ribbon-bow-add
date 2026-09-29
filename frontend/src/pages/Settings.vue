@@ -24,6 +24,10 @@ onMounted(async () => {
         <span>折边系数 overlap</span>
         <span class="meta">{{ s.overlap }}</span>
       </li>
+      <li>
+        <span>默认蝴蝶结长 bow_m（米）</span>
+        <span class="meta">{{ s.bow_m }}</span>
+      </li>
     </ul>
   </div>
 </template>

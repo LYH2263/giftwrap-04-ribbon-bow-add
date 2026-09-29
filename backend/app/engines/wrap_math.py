@@ -8,7 +8,7 @@ def paper_area(length: float, width: float, height: float, overlap: float = 1.15
 
 
 def ribbon_estimate(length: float, width: float, height: float, wrap_style: str = "cross") -> dict:
-    """Helper: approximate ribbon length in meters (not stored as primary metric)."""
+    """改造前同盒同捆扎的丝带米数（不含蝴蝶结）。蝴蝶结加长见 modules.ribbon_bow。"""
     L, W, H = float(length), float(width), float(height)
     girth = 2 * (W + H)
     if wrap_style == "band":

@@ -19,5 +19,11 @@ def init_db():
             ("牛皮纸0.7m",0.7,"clean",""),
         ])
         c.execute("INSERT INTO settings(key,value) VALUES ('overlap','1.15')")
+        c.execute("INSERT INTO settings(key,value) VALUES ('bow_m','0.30')")
         c.commit()
+    else:
+        # 既有库补齐新默认项，不覆盖已改过的值
+        if not c.execute("SELECT 1 FROM settings WHERE key='bow_m'").fetchone():
+            c.execute("INSERT INTO settings(key,value) VALUES ('bow_m','0.30')")
+            c.commit()
     c.close()
